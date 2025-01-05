@@ -52,7 +52,7 @@ method synthesize*(module: ModuleSynthUnison, x: float64, pin: int, moduleList: 
       divider += 1.0
       sum += moduleA.synthesize(moduloFix(x + getPhase(i.float64, synthInfos.macroFrame, synthInfos.macroLen, module.unisonStart.doAdsr(synthInfos.macroFrame), module.affectedBySequence), 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
 
-    return sum / divider
+    return (sum / divider).flushToZero()
 
 
 const POPUP_NAME = "Unison: Advanced Settings"

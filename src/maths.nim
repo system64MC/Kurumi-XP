@@ -18,8 +18,8 @@ proc `+`*(a: ImVec2, b: ImVec2): ImVec2 =
 proc `*`*(a: ImVec2, s: float): ImVec2 =
   return ImVec2(x: a.x * s, y: a.y * s)
 
-proc flushToZero*(n: SomeFloat): float64 =
-  if(abs(n) < 1e-15): result = 0.0 else: result = n
+proc flushToZero*(n: float64): float64 =
+  return if(abs(n) < 1e-15): 0 else: n
 
 const IM_COL32_R_SHIFT  =  16
 const IM_COL32_G_SHIFT  =  8

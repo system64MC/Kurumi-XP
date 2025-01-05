@@ -32,7 +32,7 @@ method getPhase(module: ModuleSynthPhase, mac: int32, macLen: int32): float64 {.
 method synthesize*(module: ModuleSynthPhase, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
   if(module.inputs[0].moduleIndex < 0): return 0
   let moduleA = moduleList[module.inputs[0].moduleIndex]
-  if(moduleA == nil): return 0 else: return moduleA.synthesize(moduloFix(x + module.phase.doAdsr(synthInfos.macroFrame) + module.getPhase(synthInfos.macroFrame, synthInfos.macroLen), 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
+  if(moduleA == nil): return 0 else: return moduleA.synthesize(moduloFix(x + module.phase.doAdsr(synthInfos.macroFrame) + module.getPhase(synthInfos.macroFrame, synthInfos.macroLen), 1.0), module.inputs[0].pinIndex, moduleList, synthInfos).flushToZero()
 
 
 const POPUP_NAME = "Phase: Advanced Settings"

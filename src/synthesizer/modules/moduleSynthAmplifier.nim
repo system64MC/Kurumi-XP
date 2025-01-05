@@ -26,7 +26,7 @@ method synthesize*(module: ModuleSynthAmplifier, x: float64, pin: int, moduleLis
   if(module.inputs[0].moduleIndex < 0): return 0
   let moduleA = moduleList[module.inputs[0].moduleIndex]
   if(moduleA == nil): return 0
-  else: moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos) * module.amp.doAdsr(synthInfos.macroFrame)
+  else: moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos).flushToZero() * module.amp.doAdsr(synthInfos.macroFrame)
 
 
 const POPUP_NAME = "Amplifier: Advanced Settings"

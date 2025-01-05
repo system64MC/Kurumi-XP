@@ -25,7 +25,7 @@ method synthesize*(module: ModuleSynthPhaseMod, x: float64, pin: int, moduleList
 
   let modulation = if(moduleA == nil): 0.0 else: moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
 
-  return moduleB.synthesize(moduloFix(x + modulation, 1.0), module.inputs[1].pinIndex, moduleList, synthInfos)
+  return moduleB.synthesize(moduloFix(x + modulation, 1.0), module.inputs[1].pinIndex, moduleList, synthInfos).flushToZero()
 
 method draw*(module: ModuleSynthPhaseMod, infos: var SynthInfos, modifiable: bool, eventList: var EventList): EventModuleGui =
   discard miniOsc("ABCD", module.waveDisplay.addr)

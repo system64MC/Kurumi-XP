@@ -26,7 +26,7 @@ method synthesize*(module: ModuleSynthExpMod, x: float64, pin: int, moduleList: 
   let base = moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
   let exp = if(moduleB == nil): 1.0 else: moduleB.synthesize(moduloFix(x, 1.0), module.inputs[1].pinIndex, moduleList, synthInfos)
 
-  return pow(abs(base), abs(exp)).copySign(base)
+  return pow(abs(base), abs(exp)).copySign(base).flushToZero()
 
 method draw*(module: ModuleSynthExpMod, infos: var SynthInfos, modifiable: bool, eventList: var EventList): EventModuleGui =
   discard miniOsc("ABCD", module.waveDisplay.addr)

@@ -27,7 +27,7 @@ method synthesize*(module: ModuleSynthExponenter, x: float64, pin: int, moduleLi
   let exp = module.exp.doAdsr(synthInfos.macroFrame)
   let val = moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
   let output = pow(abs(val), exp).copySign(val)
-  if(isNaN(output)): return 0 else: return output
+  if(isNaN(output)): return 0 else: return output.flushToZero()
 
 
 const POPUP_NAME = "Exponenter: Advanced Settings"

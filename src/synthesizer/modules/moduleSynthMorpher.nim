@@ -44,7 +44,7 @@ method synthesize*(module: ModuleSynthMorpher, x: float64, pin: int, moduleList:
   let valA = if(moduleA != nil): moduleA.synthesize(x, module.inputs[morphValueInt].pinIndex, moduleList, synthInfos) else: 0.0
   let valB = if(moduleB != nil): moduleB.synthesize(x, module.inputs[morphValueInt + 1].pinIndex, moduleList, synthInfos) else: 0.0
 
-  return lerp(valA, valB, morphValue - morphValueInt.float)
+  return lerp(valA, valB, morphValue - morphValueInt.float).flushToZero()
 
 const POPUP_NAME = "Morpher: Advanced Settings"
 import ../../gui/envelopes/guiEnvelopesMain
