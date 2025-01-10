@@ -18,7 +18,9 @@ import ./[
   moduleSynthInverter,
   moduleSynthHarmonics,
   moduleSynthSILM,
-  moduleSynthWaveFolder
+  moduleSynthWaveFolder,
+  moduleSynthAmpMask,
+  moduleSynthPhaseMask,
 ]
 
 export moduleSynthGeneric
@@ -41,3 +43,5 @@ export moduleSynthInverter
 export moduleSynthHarmonics
 export moduleSynthSILM
 export moduleSynthWaveFolder
+export moduleSynthAmpMask
+export moduleSynthPhaseMask

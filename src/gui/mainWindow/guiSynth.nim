@@ -174,6 +174,11 @@ proc drawSynth*(app: KuruApp, windowSize: ImVec2) =
     style.NodeCornerRounding = 11
     imnodes_BeginNodeEditor()
 
+    if(igIsKeyDown_ID(ImGuiKey_LeftShift, 0)):
+      imnodes_GetStyle().Flags = imnodes_GetStyle().Flags or ImNodesStyleFlags_GridSnapping.cint
+    else:
+      imnodes_GetStyle().Flags = imnodes_GetStyle().Flags and (not ImNodesStyleFlags_GridSnapping.cint)
+
     let absMousePos = getMousePosInEditor()
 
     let synth = app.synth

@@ -36,7 +36,7 @@ method drawPopup*(module: ModuleSynthAmplifier, infos: var SynthInfos, eventList
     igBeginTabBar("##TabBar", 0)
     igPushFont(FONT_AUDIO.getFont())
     if(igBeginTabItem(fmt"{ICON_FAD_ADSR} Amp. envelope", nil, 0)):
-      module.amp.draw(module, infos, 0, 1, eventList, moduleTitles[MODULE_OSCILLATOR].data, "Phase")
+      module.amp.draw(module, infos, 0, 1, eventList, moduleTitles[MODULE_OSCILLATOR].data, "Amplitude")
       igEndTabItem()
     igPopFont()
     igEndTabBar()

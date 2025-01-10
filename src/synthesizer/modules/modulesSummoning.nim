@@ -23,6 +23,8 @@ proc summon(moduleType: ModuleType, position: Vec2[float32]): ModuleSynthGeneric
   of MODULE_HARMONICS: return ModuleSynthHarmonics.summon(position)
   of MODULE_SILM: return ModuleSynthSILM.summon(position)
   of MODULE_WAVEFOLDER: return ModuleSynthWaveFolder.summon(position)
+  of MODULE_AMPMASK: return ModuleSynthAmpMask.summon(position)
+  of MODULE_PHASEMASK: return ModuleSynthPhaseMask.summon(position)
   of MODULE_OUTPUT: quit("Cannot summon output module")
   of MODULE_NULL: quit("Cannot summon NULL module")
   of MODULE_END: quit("Cannot summon END module")

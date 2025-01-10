@@ -27,6 +27,8 @@ type
     MODULE_HARMONICS,
     MODULE_SILM,
     MODULE_WAVEFOLDER,
+    MODULE_AMPMASK,
+    MODULE_PHASEMASK,
     MODULE_END
 
 import unicode
@@ -54,6 +56,8 @@ const moduleTitles* = {
   MODULE_HARMONICS: Text.new(FONT_AUDIO, fmt"{ICON_FAD_KEYBOARD} Harmonics"),
   MODULE_SILM: Text.new(FONT_AWESOME, fmt"{ICON_FA_CALCULATOR} SILM"),
   MODULE_WAVEFOLDER: Text.new(FONT_AUDIO, fmt"{ICON_FAD_FOLDBACK} Wavefolder"),
+  MODULE_AMPMASK: Text.new(FONT_AUDIO, fmt"{ICON_FAD_MODSH} AmpMask"),
+  MODULE_PHASEMASK: Text.new(FONT_AUDIO, fmt"{ICON_FAD_MODSH} PhaseMask")
 }.toTable
 
 export tables
