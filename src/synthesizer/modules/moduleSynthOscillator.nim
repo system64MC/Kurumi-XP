@@ -24,9 +24,11 @@ type
   ModuleSynthOscillator* = ref object of ModuleSynthGeneric
     phase: Adsr
     duty: Adsr = Adsr(peak: 0.5)
+    distortionPlace: Adsr = Adsr(peak: 0.5)
     oscType: OscType = OSC_SINE
     mult: uint8 = 1
     detune: int8 = 0
+    perfectShape: bool = false
     
   ModuleSynthOscillatorSerialize* = object of ModuleSynthGenericSerialize
 
@@ -52,15 +54,19 @@ method getPhase(module: ModuleSynthOscillator, mac: int32, macLen: int32): float
 
 proc getFinalPhase(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): float64 =
   let distortX = module.duty.doAdsr(synthInfos.macroFrame)
+  let dPlace = module.distortionPlace.doAdsr(synthInfos.macroFrame)
   var x = x
+  let phaseOff = moduloFix(((dPlace - 0.5) * (distortX - 0.5) * 2) * (if(dPlace >= 0.5): 1.0 else: -1.0), 1)
   let myMult = module.getMult()
-  x = (x * myMult) + (module.phase.doAdsr(synthInfos.macroFrame) + module.getPhase(synthInfos.macroFrame, synthInfos.macroLen))
-  x = moduloFix(x, 1)
+  x = (x * myMult) + (module.phase.doAdsr(synthInfos.macroFrame) + module.getPhase(synthInfos.macroFrame, synthInfos.macroLen) + phaseOff )
+  x = moduloFix(x + (dPlace - 0.5), 1)
+  #x = (x + (dPlace - 0.5))
   if(x < distortX):
     x = linearInterpolation(0, 0, distortX, 0.5, x)
   else:
     x = linearInterpolation(distortX, 0.5, 1, 1, x)
-  return x
+  return moduloFix(x - (dPlace - 0.5), 1)
+  #return (x - (dPlace - 0.5))
   
 
 proc sine(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): float64 =
@@ -72,18 +78,20 @@ proc square(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): 
   if(x < 0.5): return 1 else: return -1
 
 proc triangle(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): float64 =
+  #var x = (moduloFix(x, 1) * synthInfos.waveDims.x.float * synthInfos.oversample.float) / ((synthInfos.waveDims.x.float * synthInfos.oversample.float) - 1)
   var x = module.getFinalPhase(x, synthInfos)
-  return arcsin(sin(x * PI * 2)) / (PI * 0.5)
-
-#proc saw(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): float64 =
-#  var x = module.getFinalPhase(x, synthInfos)
-#  return arctan(tan((x * PI))) / (Pi * 0.5)
+  #return arcsin(sin(x * PI * 2)) / (PI * 0.5)
+  return 4.0 * (0.5 - abs(0.5 - moduloFix(x + 0.25, 1))) - 1.0
+  #return 4.0 * (0.5 - abs(0.5 - myX)) - 1.0
 
 proc saw(module: ModuleSynthOscillator, x: float64, synthInfos: SynthInfos): float64 =
-  var x = module.getFinalPhase(x + 0.5, synthInfos)
-  return (x * 2) - 1
+  var x = module.getFinalPhase(x, synthInfos)
+  #x = (moduloFix(x, 1) * synthInfos.waveDims.x.float * synthInfos.oversample.float) / ((synthInfos.waveDims.x.float * synthInfos.oversample.float) - 1)
+  return (moduloFix(x + 0.5, 1) * 2) - 1
+  #return (myX * 2) - 1
 
-method synthesize*(module: ModuleSynthOscillator, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
+method synthesize*(module: ModuleSynthOscillator, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 =
+  #let x = x + (0.5 / (synthInfos.waveDims.x.float64 * synthInfos.oversample.float64))
   case module.oscType
   of OSC_SINE: result = module.sine(x, synthInfos)
   of OSC_SQUARE: result = module.square(x, synthInfos)
@@ -111,6 +119,10 @@ method drawPopup*(module: ModuleSynthOscillator, infos: var SynthInfos, eventLis
     if(igBeginTabItem(fmt"{ICON_FAD_ADSR} Duty envelope", nil, 0)):
       module.duty.draw(module, infos, 0, 1, eventList, moduleTitles[MODULE_OSCILLATOR].data, "Duty")
       igEndTabItem()
+
+    if(igBeginTabItem(fmt"{ICON_FAD_ADSR} Duty place envelope", nil, 0)):
+      module.distortionPlace.draw(module, infos, 0, 1, eventList, moduleTitles[MODULE_OSCILLATOR].data, "Duty Place")
+      igEndTabItem()
     igPopFont()
     igEndTabBar()
 
@@ -127,6 +139,8 @@ method draw*(module: ModuleSynthOscillator, infos: var SynthInfos, modifiable: b
   igSetNextItemWidth(128)
   sliderFloat32("##Duty".cstring, module.duty.peak.addr, 0.0f, 1.0f, "Duty: %.4f".cstring, IgSliderFlags.None)
   .treatAction(eventList, fmt"Oscillator: Duty set to {module.duty.peak}")
+  sliderFloat32("##Dist".cstring, module.distortionPlace.peak.addr, 0.0f, 1.0f, "D. Place: %.4f".cstring, IgSliderFlags.None)
+  .treatAction(eventList, fmt"Oscillator: Distortion place set to {module.distortionPlace.peak}")
   igEndGroup()
 
   # 3 x 64 because we have 3 knobs of size 64.

@@ -3,6 +3,7 @@ import nimgl/[opengl,glfw]
 
 import imguin/[glfw_opengl,cimgui]
 import ../globals
+import ../maths
 
 proc setupMoonlightStyle*() = 
   # Moonlight style by Madam-Herta from ImThemes
@@ -123,3 +124,12 @@ proc setupMoonlightStyle*() =
 
   globalColorsScheme[GlobalCol_HoveredNodeOutline] = ImVec4(x: 0.6695278882980347f / 1.5, y: 0.3333271741867065f / 1.5, z: 0.3333271741867065f / 1.5, w: 1.0f)
   globalColorsScheme[GlobalCol_SelectedNodeOutline] = ImVec4(x: 0.6695278882980347f, y: 0.3333271741867065f, z: 0.3333271741867065f, w: 1.0f)
+
+  globalToggleConfig.Off.Palette[].Frame = igGetStyleColorVec4(ord ImGuiCol_FrameBg)[]
+  globalToggleConfig.Off.Palette[].FrameHover = igGetStyleColorVec4(ord ImGuiCol_FrameBgHovered)[]
+  globalToggleConfig.Off.Palette[].Knob = ImVec4(x: 0.1676214188337326f * 2, y: 0.1842878460884094f * 2, z: 0.2231759428977966f * 2, w: 1.0f)
+  globalToggleConfig.Off.Palette[].KnobHover = ImVec4(x: 0.1676214188337326f * 2.5, y: 0.1842878460884094f * 2.5, z: 0.2231759428977966f * 2.5, w: 1.0f)
+  globalToggleConfig.On.Palette[].Frame = ImVec4(x: 0.6695278882980347f / 1.5, y: 0.3333271741867065f / 1.5, z: 0.3333271741867065f / 1.5, w: 1.0f)
+  globalToggleConfig.On.Palette[].FrameHover = ImVec4(x: 0.6695278882980347f, y: 0.3333271741867065f, z: 0.3333271741867065f, w: 1.0f)
+  globalToggleConfig.On.Palette[].Knob = ImVec4(x: 1.0f * 0.9, y: 0.7960784435272217f * 0.9, z: 0.4980392158031464f * 0.9, w: 1.0f)
+  globalToggleConfig.On.Palette[].KnobHover = ImVec4(x: 1.0f, y: 0.7960784435272217f, z: 0.4980392158031464f, w: 1.0f)

@@ -18,8 +18,14 @@ proc `+`*(a: ImVec2, b: ImVec2): ImVec2 =
 proc `*`*(a: ImVec2, s: float): ImVec2 =
   return ImVec2(x: a.x * s, y: a.y * s)
 
+proc `*`*(a: ImVec4, b: ImVec4): ImVec4 =
+  return ImVec4(x: a.x * b.x, y: a.y * b.y, z: a.z * b.z, w: a.w * b.w)
+
 proc flushToZero*(n: float64): float64 =
   return if(abs(n) < 1e-15): 0 else: n
+
+proc lerp*(x, y, a: float64): float64 =
+  return x*(1-a) + y*a  
 
 const IM_COL32_R_SHIFT  =  16
 const IM_COL32_G_SHIFT  =  8

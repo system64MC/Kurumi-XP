@@ -27,3 +27,4 @@ type
 
 var globalColorsScheme*: array[GlobalColors, ImVec4]
 var globalWindowPadding*: ImVec2
+var globalToggleConfig*: ImGuiToggleConfig

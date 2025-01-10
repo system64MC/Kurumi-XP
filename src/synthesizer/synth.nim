@@ -17,6 +17,9 @@ type
     textAsSigned*: bool = false
     textSequence*: bool = false
 
+    previewOn*: bool = false
+    previewVolume*: float32 = 0.25
+
 proc create*(_: typedesc[Synth]): Synth =
   let synth = Synth()
   synth.moduleList[0] = ModuleSynthOutput.summon()
@@ -40,15 +43,15 @@ proc synthesize*(synth: Synth, redraw: bool = true) {.gcsafe.} =
     Thank you Tildearrow, the Furnace dev for this hack
     to get beautiful saw waves!
   ]#
-  let tildearrowAntiBadSawOffset = (0.5 / (synth.synthInfos.waveDims.x.float64 * synth.synthInfos.oversample.float64))
+  let tildearrowAntiBadSawOffset = 0.0#(0.5 / (synth.synthInfos.waveDims.x.float64 * synth.synthInfos.oversample.float64))
   let overSampleValue = 1.0/synth.synthInfos.oversample.float64
   for i in 0..<synth.synthInfos.waveDims.x:
     var sum = 0.0
     var j = 0.0
     while(j < 1):
-      sum += outModule.synthesize(moduloFix(tildearrowAntiBadSawOffset + (i.float64 + j) / (synth.synthInfos.waveDims.x.float64), 1.0), outModule.inputs[0].pinIndex, synth.moduleList, synth.synthInfos) * overSampleValue
+      sum += outModule.synthesize(moduloFix(tildearrowAntiBadSawOffset + (i.float64 + j) / (synth.synthInfos.waveDims.x.float64), 1.0), outModule.inputs[0].pinIndex, synth.moduleList, synth.synthInfos, synth.synthInfos.waveDims.x * synth.synthInfos.oversample) * overSampleValue
       j += overSampleValue
-    synth.waveOutputFloat[i] = sum.flushToZero()
+    synth.waveOutputFloat[i] = sum
 
   for i in 0..<synth.synthInfos.waveDims.x:
     var value: float64 = clamp(synth.waveOutputFloat[i], -1.0, 1.0) + 1.0

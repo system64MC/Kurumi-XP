@@ -13,6 +13,12 @@ import ./[
   moduleSynthMiniMax,
   moduleSynthUnison,
   moduleSynthMorpher,
+  moduleSynthRectifier,
+  moduleSynthAbsoluter,
+  moduleSynthInverter,
+  moduleSynthHarmonics,
+  moduleSynthSILM,
+  moduleSynthWaveFolder
 ]
 
 export moduleSynthGeneric
@@ -29,3 +35,9 @@ export moduleSynthSplitter
 export moduleSynthMiniMax
 export moduleSynthUnison
 export moduleSynthMorpher
+export moduleSynthRectifier
+export moduleSynthAbsoluter
+export moduleSynthInverter
+export moduleSynthHarmonics
+export moduleSynthSILM
+export moduleSynthWaveFolder

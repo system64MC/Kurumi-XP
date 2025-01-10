@@ -69,6 +69,7 @@ when LTO: # These options let link time slow while reducing code size.
 
 switch("d", "ImNodesEnable")
 switch("d", "ImKnobsEnable")
+switch("d", "ImGuiToggleEnable")
 when defined(opt1):
   switch("d", "release")
   switch("opt", "speed")

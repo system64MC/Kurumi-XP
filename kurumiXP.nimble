@@ -13,6 +13,8 @@ bin           = @["kurumiXP"]
 requires "nim >= 2.2.0"
 requires "https://github.com/dinau/imguin#head"
 requires "https://github.com/DavideGalilei/nimpresence"
+requires "https://github.com/beef331/miniaudio"
 requires "flatty"
 requires "zigcc"
 requires "malebolgia"
+#requires "miniaudio"

@@ -7,6 +7,7 @@ import ../../globals
 import ../../synthesizer/synth
 import ../../synthesizer/modules/moduleSynthGeneric
 import ../../app
+import ../widgets
 
 import ./[guiSynth, guiWavePreview, guiModulesList]
 
@@ -16,6 +17,10 @@ proc drawMainWindow*(app: KuruApp) =
     if(igBeginMenu("File", true)):
       if(igMenuItemEx("Exit", nil, nil, false, true)):
         app.window.setWindowShouldClose(true)
+      igEndMenu()
+    if(igBeginMenu("Sound preview", true)):
+      discard toggle("Enable sound preview", app.synth.previewOn.addr, ImVec2(x: 0, y: 0))
+      discard knobFloat[float32]("Volume", app.synth.previewVolume.addr, 0.0f, 1.0f, 0, size = 64)
       igEndMenu()
     igEndMainMenuBar()
 

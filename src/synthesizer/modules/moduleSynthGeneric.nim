@@ -23,12 +23,12 @@ type
     inputs*: seq[PinConnection]
     outputs*: seq[PinConnection]
 
-method synthesize*(module: ModuleSynthGeneric, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 {.base, gcsafe.} =
+method synthesize*(module: ModuleSynthGeneric, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 {.base, gcsafe.} =
   return x
 
-method updateDisplay*(module: ModuleSynthGeneric, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos) {.base, gcsafe.} =
+method updateDisplay*(module: ModuleSynthGeneric, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int) {.base, gcsafe.} =
   for i in 0..<MODULE_DISPLAY_RESOLUTION.int:
-    let sample = module.synthesize(i.float64 / MODULE_DISPLAY_RESOLUTION, 0, moduleList, synthInfos)
+    let sample = module.synthesize(i.float64 / MODULE_DISPLAY_RESOLUTION, 0, moduleList, synthInfos, MODULE_DISPLAY_RESOLUTION)
     module.waveDisplay[i] = sample.float32
   return
 

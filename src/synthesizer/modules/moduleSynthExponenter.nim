@@ -20,12 +20,12 @@ type
 proc summon*(_: typedesc[ModuleSynthExponenter], position: Vec2[float32]): ModuleSynthExponenter =
   return ModuleSynthExponenter(inputs: @[PinConnection(moduleIndex: -1, pinIndex: -1)], outputs: @[PinConnection(moduleIndex: -1, pinIndex: -1)], position: position)
 
-method synthesize*(module: ModuleSynthExponenter, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
+method synthesize*(module: ModuleSynthExponenter, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 =
   if(module.inputs[0].moduleIndex < 0): return 0
   let moduleA = moduleList[module.inputs[0].moduleIndex]
   if(moduleA == nil): return 0 
   let exp = module.exp.doAdsr(synthInfos.macroFrame)
-  let val = moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
+  let val = moduleA.synthesize(moduloFix(x, 1.0), module.inputs[0].pinIndex, moduleList, synthInfos, renderWidth)
   let output = pow(abs(val), exp).copySign(val)
   if(isNaN(output)): return 0 else: return output.flushToZero()
 

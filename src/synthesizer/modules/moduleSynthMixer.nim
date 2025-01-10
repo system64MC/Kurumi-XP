@@ -28,14 +28,14 @@ proc summon*(_: typedesc[ModuleSynthMixer], position: Vec2[float32]): ModuleSynt
   PinConnection(moduleIndex: -1, pinIndex: -1)
   ], outputs: @[PinConnection(moduleIndex: -1, pinIndex: -1)], position: position)
 
-method synthesize*(module: ModuleSynthMixer, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
+method synthesize*(module: ModuleSynthMixer, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 =
   var output = 0.0
 
   for link in module.inputs:
     if(link.moduleIndex > -1):
       let module = moduleList[link.moduleIndex]
       if(module == nil): continue
-      output += module.synthesize(moduloFix(x, 1.0), link.pinIndex, moduleList, synthInfos)
+      output += module.synthesize(moduloFix(x, 1.0), link.pinIndex, moduleList, synthInfos, renderWidth)
 
   return output.flushToZero()
 

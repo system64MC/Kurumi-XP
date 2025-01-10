@@ -13,6 +13,8 @@ import events
 import utils
 import maths
 import synthesizer/modules/modulesSummoning
+import globals
+import audioPreview
 
 const MainWinWidth = 1024
 const MainWinHeight = 800
@@ -98,14 +100,7 @@ proc draw*(app: KuruApp) =
   ImGui_ImplGlfw_NewFrame()
   igNewFrame()
 
-
   app.drawMainWindow()
-
-  
-  
-
-  igShowDemoWindow(nil)
-  
 
   igRender()
   glClearColor(0.1, 0, 0.2, 0)
@@ -125,7 +120,7 @@ import synthesizer/synthInfos
 proc redrawWaves(synth: Synth): void =
   for m in synth.moduleList:
     if(m == nil): continue
-    m.updateDisplay(synth.moduleList, synth.synthInfos)
+    m.updateDisplay(synth.moduleList, synth.synthInfos, 128)
 
 proc treatEvents*(app: KuruApp) =
   for e in app.events:
@@ -204,7 +199,7 @@ proc treatEvents*(app: KuruApp) =
         let moduleIndex = summonToList(data.module, app.synth.moduleList, Vec2[float32](x: data.position.x - 32, y: data.position.y - 16))
         if(moduleIndex >= 0):
           let module = app.synth.moduleList[moduleIndex]
-          module.updateDisplay(app.synth.moduleList, app.synth.synthInfos)
+          module.updateDisplay(app.synth.moduleList, app.synth.synthInfos, 128)
       of EventType.EVENT_LINK_DESTROYED:
         let data = fromFlatty(e.data, ModuleLink)
         let sourceModule = app.synth.moduleList[data.source.moduleIndex]
@@ -231,13 +226,17 @@ import gui/themes
 proc init*(t: typedesc[KuruApp]): KuruApp =
   let app = KuruApp()
   app.synth = Synth.create()
+  app.synth.synthesize()
   app.window = initWindow()
   app.window.setupImGUI()
   app.window.showWindow()
   igStyleColorsDark(nil)
   imnodes_StyleColorsDark(nil)
   initFonts()
+  globalToggleConfig = ImGuiTogglePresets_iOSStyle(0, false)
   setupMoonlightStyle()
+  app.synth.addr.initMiniaudio()
+  #ImGuiToggleConfig_init(toggleConfig.addr)
   return app
 
 import json

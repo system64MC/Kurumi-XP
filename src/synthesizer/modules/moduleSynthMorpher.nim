@@ -29,10 +29,7 @@ proc summon*(_: typedesc[ModuleSynthMorpher], position: Vec2[float32]): ModuleSy
       PinConnection(moduleIndex: -1, pinIndex: -1),
     ], outputs: @[PinConnection(moduleIndex: -1, pinIndex: -1)], position: position)
 
-proc lerp(x, y, a: float64): float64 =
-  return x*(1-a) + y*a  
-
-method synthesize*(module: ModuleSynthMorpher, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
+method synthesize*(module: ModuleSynthMorpher, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 =
   let morphValue = module.morph.doAdsr(synthInfos.macroFrame)
   let morphValueInt = morphValue.int
 
@@ -41,8 +38,8 @@ method synthesize*(module: ModuleSynthMorpher, x: float64, pin: int, moduleList:
 
   let moduleA = if(pinA.moduleIndex > -1 and pinA.pinIndex > -1): moduleList[pinA.moduleIndex] else: nil
   let moduleB = if(pinB.moduleIndex > -1 and pinB.pinIndex > -1): moduleList[pinB.moduleIndex] else: nil
-  let valA = if(moduleA != nil): moduleA.synthesize(x, module.inputs[morphValueInt].pinIndex, moduleList, synthInfos) else: 0.0
-  let valB = if(moduleB != nil): moduleB.synthesize(x, module.inputs[morphValueInt + 1].pinIndex, moduleList, synthInfos) else: 0.0
+  let valA = if(moduleA != nil): moduleA.synthesize(x, module.inputs[morphValueInt].pinIndex, moduleList, synthInfos, renderWidth) else: 0.0
+  let valB = if(moduleB != nil): moduleB.synthesize(x, module.inputs[morphValueInt + 1].pinIndex, moduleList, synthInfos, renderWidth) else: 0.0
 
   return lerp(valA, valB, morphValue - morphValueInt.float).flushToZero()
 

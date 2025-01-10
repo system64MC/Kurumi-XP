@@ -135,7 +135,8 @@ proc drawWavePreview*(app: KuruApp) =
         app.synth.textAsSigned = not app.synth.textAsSigned
       if(igIsItemHovered(0)):
         igSetTooltip(if(app.synth.textAsSigned): "Signed" else: "Unsigned")
-    igCheckbox("Sequence", app.synth.textSequence.addr)
+    #igCheckbox("Sequence", app.synth.textSequence.addr)
+    discard toggle("Sequence", app.synth.textSequence.addr)
     if(igButton(fmt"{ICON_FA_CLIPBOARD} Copy to clipboard", ImVec2(x: 0, y: 0))):
       igSetClipboardText(if(app.synth.textSequence): app.synth.generateSeqStr() else: app.synth.generateWaveStr())
     igEndChild()

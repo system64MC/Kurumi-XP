@@ -308,6 +308,14 @@ proc checkBox*(label: cstring, p_data: ptr bool): WidgetAction =
   else:
     return WIDGET_NONE
 
+proc toggle*(label: cstring, p_data: ptr bool, size: ImVec2 = ImVec2(x: 0, y: 0)): WidgetAction =
+  #let res = ToggleFlag(label, p_data, ImGui_ToggleFlags_Animated.int32, size)
+  let res = ToggleCfg(label, p_data, globalToggleConfig)
+  if(res):
+    return WIDGET_MODIFIED
+  else:
+    return WIDGET_NONE
+
 proc toolTip*(text: cstring) =
   if(igIsItemHovered(0) and not igIsItemActive()):
     igPushStyleVar_Vec2(ImGui_StyleVar_WindowPadding.cint, ImVec2(x: 4, y: 4))

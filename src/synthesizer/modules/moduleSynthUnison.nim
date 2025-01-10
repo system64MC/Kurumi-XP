@@ -38,19 +38,19 @@ proc getPhase(unisonLevel: float64, mac: int32, macLen: int32, unisonStart: floa
   if(macLen < 1): macLen = 1
   return (if(sequence): (mac.float64 / (macLen) * detune) else: 0) + (unisonStart * detune)
 
-method synthesize*(module: ModuleSynthUnison, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos): float64 =
+method synthesize*(module: ModuleSynthUnison, x: float64, pin: int, moduleList: array[MAX_MODULES, ModuleSynthGeneric], synthInfos: SynthInfos, renderWidth: int): float64 =
   if(module.inputs[0].moduleIndex < 0): return 0
   let moduleA = moduleList[module.inputs[0].moduleIndex]
   if(moduleA == nil): 
     return 0.0
   else:
     if(module.unison < 1):
-      return moduleA.synthesize(x, module.inputs[0].pinIndex, moduleList, synthInfos)
+      return moduleA.synthesize(x, module.inputs[0].pinIndex, moduleList, synthInfos, renderWidth)
     var sum = 0.0
     var divider = 0.0
     for i in 0..module.unison.uint32:
       divider += 1.0
-      sum += moduleA.synthesize(moduloFix(x + getPhase(i.float64, synthInfos.macroFrame, synthInfos.macroLen, module.unisonStart.doAdsr(synthInfos.macroFrame), module.affectedBySequence), 1.0), module.inputs[0].pinIndex, moduleList, synthInfos)
+      sum += moduleA.synthesize(moduloFix(x + getPhase(i.float64, synthInfos.macroFrame, synthInfos.macroLen, module.unisonStart.doAdsr(synthInfos.macroFrame), module.affectedBySequence), 1.0), module.inputs[0].pinIndex, moduleList, synthInfos, renderWidth)
 
     return (sum / divider).flushToZero()
 
@@ -74,7 +74,8 @@ method `contentWidth`*(module: ModuleSynthUnison): float32 =
 method draw*(module: ModuleSynthUnison, infos: var SynthInfos, modifiable: bool, eventList: var EventList): EventModuleGui =
   discard miniOsc("ABCD", module.waveDisplay.addr)
   igSetNextItemWidth(128)
-  checkBox("Sequence", module.affectedBySequence.addr)
+  #checkBox("Sequence", module.affectedBySequence.addr)
+  toggle("Sequence", module.affectedBySequence.addr)
   .treatAction(eventList, fmt"Unison: Sequence set to {module.affectedBySequence}")
   toolTip("If enabled, the unison is affected by the sequence.")
   const KNOB_SIZE = 64
